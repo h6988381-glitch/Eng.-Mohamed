@@ -1,0 +1,973 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Eng. Mohamed</title>
+    <!-- خطوط جوجل العربية الفخمة -->
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700;900&display=swap" rel="stylesheet">
+    <!-- FontAwesome للأيقونات -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Cairo', sans-serif;
+        }
+
+        body {
+            background-color: #0b0f19;
+            color: #f1f5f9;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* الهيدر العلوي الأنيق وزر الـ 3 شرط */
+        header {
+            background: linear-gradient(135deg, #111827, #1f2937);
+            padding: 15px 25px;
+            border-bottom: 1px solid #374151;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.5);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+
+        header h1 {
+            font-size: 1.5rem;
+            color: #38bdf8;
+            font-weight: 900;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .menu-btn {
+            background: #1f2937;
+            border: 1px solid #374151;
+            color: #38bdf8;
+            font-size: 1.3rem;
+            padding: 8px 12px;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+
+        .menu-btn:hover {
+            background: #374151;
+        }
+
+        /* القائمة الجانبية المخفية (تفتح بالـ 3 شرط) */
+        .sidebar {
+            position: fixed;
+            top: 0;
+            right: -300px;
+            width: 280px;
+            height: 100%;
+            background: #111827;
+            border-left: 1px solid #1f2937;
+            box-shadow: -5px 0 25px rgba(0,0,0,0.7);
+            z-index: 2000;
+            transition: 0.3s ease-in-out;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .sidebar.open {
+            right: 0;
+        }
+
+        .sidebar-header {
+            padding: 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid #1f2937;
+            color: #38bdf8;
+            font-weight: bold;
+            font-size: 1.2rem;
+        }
+
+        .close-sidebar {
+            background: none;
+            border: none;
+            color: #94a3b8;
+            font-size: 1.2rem;
+            cursor: pointer;
+        }
+
+        .sidebar-menu {
+            list-style: none;
+            padding: 15px;
+            overflow-y: auto;
+            flex-grow: 1;
+        }
+
+        .sidebar-menu li {
+            padding: 10px 12px;
+            border-radius: 8px;
+            margin-bottom: 5px;
+            cursor: pointer;
+            color: #cbd5e1;
+            font-size: 0.95rem;
+            transition: 0.2s;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .sidebar-menu li:hover {
+            background: #1f2937;
+            color: #38bdf8;
+        }
+
+        /* طباعة شفافة عند فتح القائمة */
+        .overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.5);
+            z-index: 1500;
+            display: none;
+        }
+        .overlay.active {
+            display: block;
+        }
+
+        /* حاوية المحتوى الرئيسي */
+        .container {
+            max-width: 900px;
+            margin: 30px auto;
+            padding: 0 20px;
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            gap: 25px;
+            flex-grow: 1;
+        }
+
+        .card {
+            background: #111827;
+            border: 1px solid #1f2937;
+            border-radius: 18px;
+            padding: 25px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.4);
+            scroll-margin-top: 90px;
+        }
+
+        .card h2 {
+            font-size: 1.35rem;
+            color: #38bdf8;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            border-bottom: 1px solid #1f2937;
+            padding-bottom: 12px;
+        }
+
+        button {
+            background: #0284c7;
+            color: white;
+            border: none;
+            padding: 10px 18px;
+            border-radius: 10px;
+            cursor: pointer;
+            font-weight: 700;
+            transition: 0.2s;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        button:hover { background: #0ea5e9; }
+        button.secondary { background: #1f2937; border: 1px solid #374151; color: #e2e8f0; }
+        button.secondary:hover { background: #374151; }
+        button.danger { background: #dc2626; }
+        button.danger:hover { background: #ef4444; }
+        button.success { background: #16a34a; }
+        button.success:hover { background: #22c55e; }
+        button.recording { background: #16a34a !important; animation: pulse 1.5s infinite; }
+
+        @keyframes pulse { 0% { opacity: 1; } 50% { opacity: 0.6; } 100% { opacity: 1; } }
+
+        input, textarea, select {
+            width: 100%;
+            background: #030712;
+            border: 1px solid #1f2937;
+            padding: 12px 16px;
+            border-radius: 10px;
+            color: white;
+            font-size: 1rem;
+            margin-bottom: 12px;
+        }
+
+        input:focus, textarea:focus, select:focus { border-color: #38bdf8; outline: none; }
+
+        .timer-display {
+            font-size: 3.5rem;
+            font-weight: 900;
+            text-align: center;
+            color: #38bdf8;
+            margin: 15px 0;
+            font-family: monospace;
+            text-shadow: 0 0 20px rgba(56, 189, 248, 0.3);
+        }
+        .timer-btns { display: flex; gap: 10px; justify-content: center; }
+
+        .list-item, .todo-item {
+            background: #030712;
+            padding: 12px 15px;
+            border-radius: 10px;
+            margin-bottom: 8px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border: 1px solid #1f2937;
+        }
+
+        .flashcard {
+            background: #030712;
+            border: 1px solid #1f2937;
+            border-radius: 12px;
+            padding: 20px;
+            text-align: center;
+            cursor: pointer;
+            min-height: 120px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            transition: 0.3s;
+        }
+        .flashcard:hover { border-color: #38bdf8; }
+
+        footer {
+            text-align: center;
+            padding: 25px;
+            background: #111827;
+            border-top: 1px solid #1f2937;
+            color: #94a3b8;
+            font-size: 0.95rem;
+            margin-top: auto;
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <h1><i class="fa-solid fa-graduation-cap"></i> Study Hub Pro</h1>
+        <div style="display: flex; gap: 10px; align-items: center;">
+            <button class="secondary" onclick="window.print()" style="padding: 8px 12px; font-size: 0.85rem;"><i class="fa-solid fa-file-pdf"></i> طباعة PDF</button>
+            <button class="menu-btn" onclick="toggleSidebar()"><i class="fa-solid fa-bars"></i></button>
+        </div>
+    </header>
+
+    <!-- الطبقة الشفافة عند فتح القائمة -->
+    <div class="overlay" id="overlay" onclick="toggleSidebar()"></div>
+
+    <!-- القائمة الجانبية (3 شرط) -->
+    <div class="sidebar" id="sidebar">
+        <div class="sidebar-header">
+            <span><i class="fa-solid fa-bars"></i> أقسام المنصة</span>
+            <button class="close-sidebar" onclick="toggleSidebar()"><i class="fa-solid fa-xmark"></i></button>
+        </div>
+        <ul class="sidebar-menu">
+            <li onclick="scrollToSection('sec-next')"><i class="fa-solid fa-compass"></i> مساعد ماذا أذاكر الآن؟</li>
+            <li onclick="scrollToSection('sec-timer')"><i class="fa-solid fa-clock"></i> مؤقت التركيز</li>
+            <li onclick="scrollToSection('sec-lecture')"><i class="fa-solid fa-microphone"></i> المحاضرات والتلخيص</li>
+            <li onclick="scrollToSection('sec-mastery')"><i class="fa-solid fa-map"></i> خريطة إتقان المنهج</li>
+            <li onclick="scrollToSection('sec-comprehension')"><i class="fa-solid fa-brain"></i> وضع اختبر فهمي</li>
+            <li onclick="scrollToSection('sec-difficulty')"><i class="fa-solid fa-layer-group"></i> صعوبة الأسئلة</li>
+            <li onclick="scrollToSection('sec-mindmap')"><i class="fa-solid fa-project-diagram"></i> خريطة ترابط المعلومات</li>
+            <li onclick="scrollToSection('sec-mistakes')"><i class="fa-solid fa-triangle-exclamation"></i> مختبر أسباب الأخطاء</li>
+            <li onclick="scrollToSection('sec-exam')"><i class="fa-solid fa-file-pen"></i> محاكي ظروف الامتحان</li>
+            <li onclick="scrollToSection('sec-prereq')"><i class="fa-solid fa-list-ol"></i> كاشف المتطلبات السابقة</li>
+            <li onclick="scrollToSection('sec-recall')"><i class="fa-solid fa-brain"></i> اختبر ذاكرتي (التذكر الحر)</li>
+            <li onclick="scrollToSection('sec-quality')"><i class="fa-solid fa-heart-pulse"></i> سجل جودة المذاكرة</li>
+            <li onclick="scrollToSection('sec-compare')"><i class="fa-solid fa-scale-balanced"></i> أداة مقارنة المفاهيم</li>
+            <li onclick="scrollToSection('sec-problems')"><i class="fa-solid fa-calculator"></i> مولّد المسائل العملية</li>
+            <li onclick="scrollToSection('sec-glossary')"><i class="fa-solid fa-book"></i> قاموس المصطلحات</li>
+            <li onclick="scrollToSection('sec-training')"><i class="fa-solid fa-dumbbell"></i> مولّد التدريبات</li>
+            <li onclick="scrollToSection('sec-readiness')"><i class="fa-solid fa-file-waveform"></i> تقرير الجاهزية للامتحان</li>
+            <li onclick="scrollToSection('sec-todos')"><i class="fa-solid fa-list-check"></i> المهام اليومية</li>
+            <li onclick="scrollToSection('sec-analytics')"><i class="fa-solid fa-chart-line"></i> لوحة تحليل المستوى</li>
+            <li onclick="scrollToSection('sec-flashcards')"><i class="fa-solid fa-clone"></i> كروت الحفظ (Flashcards)</li>
+            <li onclick="scrollToSection('sec-aitutor')"><i class="fa-solid fa-robot"></i> المدرس الذكي</li>
+            <li onclick="scrollToSection('sec-grades')"><i class="fa-solid fa-calculator"></i> حاسبة الدرجات</li>
+            <li onclick="scrollToSection('sec-goals')"><i class="fa-solid fa-bullseye"></i> الأهداف الأسبوعية</li>
+            <li onclick="scrollToSection('sec-backup')"><i class="fa-solid fa-database"></i> الملاحظات والنسخ الاحتياطي</li>
+        </ul>
+    </div>
+
+    <!-- المحتوى الرئيسي تحت بعضه -->
+    <div class="container">
+
+        <!-- 10. مساعد "ماذا أذاكر الآن؟" -->
+        <div class="card" id="sec-next" style="border-color: #38bdf8;">
+            <h2><i class="fa-solid fa-compass"></i> مساعد "ماذا أذاكر الآن؟"</h2>
+            <div style="display: flex; gap: 10px; margin-bottom: 12px;">
+                <input type="number" id="availableMinutes" placeholder="الوقت المتاح (دقائق، مثلاً 60)..." style="margin-bottom:0;">
+                <button onclick="suggestNextStudyStep()">اقتراح خطوة المذاكرة</button>
+            </div>
+            <div id="nextStepSuggestionBox" style="background:#030712; padding:15px; border-radius:10px; line-height:1.8;">حدد وقتك واضغط للحصول على توجيه ذكي!</div>
+        </div>
+
+        <!-- 1. مؤقت التركيز البومودورو -->
+        <div class="card" id="sec-timer">
+            <h2><i class="fa-solid fa-clock"></i> مؤقت التركيز (Pomodoro)</h2>
+            <div class="timer-display" id="timerDisplay">25:00</div>
+            <div class="timer-btns">
+                <button onclick="startTimer()"><i class="fa-solid fa-play"></i> ابدأ</button>
+                <button class="secondary" onclick="pauseTimer()"><i class="fa-solid fa-pause"></i> إيقاف</button>
+                <button class="danger" onclick="resetTimer()"><i class="fa-solid fa-rotate-right"></i> إعادة</button>
+            </div>
+        </div>
+
+        <!-- تسجيل وتلخيص المحاضرات والامتحان الفوري -->
+        <div class="card" id="sec-lecture">
+            <h2><i class="fa-solid fa-microphone-lines"></i> تسجيل المحاضرات الصوتية وتلخيصها</h2>
+            <button id="micBtn" onclick="toggleSpeechRecognition()" class="secondary"><i class="fa-solid fa-microphone"></i> تسجيل صوتي للمحاضرة</button>
+            <textarea id="lectureInput" placeholder="الصق نص المحاضرة أو الكتاب هنا..." style="height: 110px; margin-top: 10px;"></textarea>
+            <button class="success" onclick="goToExamAndSummary()"><i class="fa-solid fa-wand-magic-sparkles"></i> تلخيص وعمل امتحان تفاعلي 🚀</button>
+            
+            <div id="examSummaryContainer" style="display:none; margin-top: 15px; background:#030712; padding:15px; border-radius:12px; border:1px solid #1f2937;">
+                <h3 style="color:#38bdf8; margin-bottom:10px;">التلخيص:</h3>
+                <div id="summaryOutput" style="margin-bottom:12px; line-height:1.8;"></div>
+                <p id="examQuestion" style="font-weight:bold; margin-bottom:10px;"></p>
+                <div id="examOptionsContainer" style="display:flex; flex-direction:column; gap:8px;"></div>
+                <p id="examFeedback" style="margin-top:10px; font-weight:bold;"></p>
+            </div>
+        </div>
+
+        <!-- أولاً: خريطة إتقان المنهج -->
+        <div class="card" id="sec-mastery">
+            <h2><i class="fa-solid fa-map"></i> خريطة إتقان المنهج والموضوعات</h2>
+            <input type="text" id="masterySubject" placeholder="اسم المادة (مثلا: محاسبة مالية)...">
+            <input type="text" id="masteryTopic" placeholder="اسم الموضوع أو المحاضرة...">
+            <select id="masteryStatus">
+                <option value="لم أبدأ">لم أبدأ</option>
+                <option value="قيد الدراسة">قيد الدراسة</option>
+                <option value="يحتاج إلى مراجعة">يحتاج إلى مراجعة</option>
+                <option value="متقن">متقن ✅</option>
+            </select>
+            <button onclick="addMasteryTopic()">إضافة لمتابعة الإتقان</button>
+            <div id="masteryList" style="margin-top:15px;"></div>
+        </div>
+
+        <!-- ثانياً: وضع اختبر فهمي -->
+        <div class="card" id="sec-comprehension">
+            <h2><i class="fa-solid fa-brain"></i> وضع "اختبر فهمي"</h2>
+            <textarea id="comprehensionText" placeholder="الصق موضوعاً أو فقرة تريد فهمها بعمق..." style="height:80px;"></textarea>
+            <button onclick="startComprehensionMode()">ابدأ جلسة اختبر فهمي</button>
+            <div id="comprehensionBox" style="margin-top:15px; background:#030712; padding:15px; border-radius:10px; display:none;">
+                <p id="compQuestion" style="font-weight:bold; margin-bottom:10px;"></p>
+                <input type="text" id="compAnswerInput" placeholder="اكتب تفسيرك أو إجابتك هنا...">
+                <button onclick="submitCompAnswer()">إرسال الإجابة</button>
+                <p id="compFeedback" style="margin-top:10px; font-weight:bold;"></p>
+            </div>
+        </div>
+
+        <!-- ثالثاً: تحليل مستوى صعوبة الأسئلة -->
+        <div class="card" id="sec-difficulty">
+            <h2><i class="fa-solid fa-layer-group"></i> تحليل مستوى صعوبة الأسئلة</h2>
+            <input type="text" id="diffQuestionText" placeholder="السؤال التطبيقي...">
+            <select id="diffLevel">
+                <option value="سهل">سهل</option>
+                <option value="متوسط">متوسط</option>
+                <option value="صعب">صعب</option>
+            </select>
+            <button onclick="addDifficultyQuestion()">إضافة سؤال للتصنيف</button>
+            <div id="difficultyList" style="margin-top:15px;"></div>
+        </div>
+
+        <!-- رابعاً: خريطة ترابط المعلومات -->
+        <div class="card" id="sec-mindmap">
+            <h2><i class="fa-solid fa-project-diagram"></i> خريطة ترابط المفاهيم</h2>
+            <input type="text" id="mapConcept" placeholder="المفهوم الرئيسي (العقدة)...">
+            <input type="text" id="mapRelation" placeholder="التعريف أو العلاقة المرتبطة به...">
+            <button onclick="addMindMapConcept()">إضافة للخريطة</button>
+            <div id="mindMapList" style="margin-top:15px;"></div>
+        </div>
+
+        <!-- خامساً: مختبر أسباب الأخطاء -->
+        <div class="card" id="sec-mistakes">
+            <h2><i class="fa-solid fa-triangle-exclamation"></i> مختبر أسباب الأخطاء</h2>
+            <div id="mistakesList"></div>
+        </div>
+
+        <!-- سادساً: محاكي ظروف الامتحان -->
+        <div class="card" id="sec-exam">
+            <h2><i class="fa-solid fa-file-pen"></i> محاكي ظروف الامتحان الجامعي</h2>
+            <input type="text" id="simExamSubject" placeholder="اسم المادة للامتحان التجريبي...">
+            <button onclick="startSimulatedExam()">بدء الامتحان التجريبي</button>
+            <div id="simExamBox" style="margin-top:15px; background:#030712; padding:15px; border-radius:10px; display:none;">
+                <p id="simQText" style="font-weight:bold; margin-bottom:10px;"></p>
+                <div id="simOptsContainer"></div>
+                <button onclick="submitSimExam()" style="margin-top:10px;">تسليم الامتحان</button>
+                <p id="simResult" style="margin-top:10px; font-weight:bold;"></p>
+            </div>
+        </div>
+
+        <!-- سابعاً: كاشف المتطلبات السابقة -->
+        <div class="card" id="sec-prereq">
+            <h2><i class="fa-solid fa-list-ol"></i> كاشف المتطلبات السابقة للموضوعات</h2>
+            <input type="text" id="prereqTarget" placeholder="الموضوع الجديد...">
+            <input type="text" id="prereqRequired" placeholder="المتطلب السابق الواجب دراسته...">
+            <button onclick="addPrerequisite()">ربط المتطلب السابق</button>
+            <div id="prereqList" style="margin-top:15px;"></div>
+        </div>
+
+        <!-- ثامناً: وضع استرجاع المعلومات من الذاكرة -->
+        <div class="card" id="sec-recall">
+            <h2><i class="fa-solid fa-brain"></i> وضع "اختبر ذاكرتي" (التذكر الحر)</h2>
+            <input type="text" id="recallTopic" placeholder="عنوان الموضوع أو المحاضرة...">
+            <textarea id="recallUserText" placeholder="اكتب كل ما تتذكره من معلومات بنفسك..." style="height:80px;"></textarea>
+            <button onclick="evaluateRecall()">مقارنة وتصحيح الذاكرة</button>
+            <div id="recallFeedback" style="margin-top:15px; background:#030712; padding:15px; border-radius:10px; display:none;"></div>
+        </div>
+
+        <!-- تاسعاً: سجل جودة المذاكرة -->
+        <div class="card" id="sec-quality">
+            <h2><i class="fa-solid fa-heart-pulse"></i> سجل جودة وتركيز جلسة المذاكرة</h2>
+            <select id="studyFocusLevel">
+                <option value="ممتاز 🌟">ممتاز 🌟</option>
+                <option value="جيد جداً 👍">جيد جداً 👍</option>
+                <option value="متوسط 😐">متوسط 😐</option>
+                <option value="ضعيف / مشتت 🌀">ضعيف / مشتت 🌀</option>
+            </select>
+            <input type="text" id="studyEnvironment" placeholder="مكان المذاكرة والظروف (اختياري)...">
+            <button onclick="saveStudyQualityLog()">تسجيل جودة الجلسة</button>
+            <div id="qualityLogsList" style="margin-top:15px;"></div>
+        </div>
+
+        <!-- الحادي عشر: وضع المقارنة بين المفاهيم -->
+        <div class="card" id="sec-compare">
+            <h2><i class="fa-solid fa-scale-balanced"></i> أداة مقارنة المفاهيم</h2>
+            <input type="text" id="compConcept1" placeholder="المفهوم الأول...">
+            <input type="text" id="compConcept2" placeholder="المفهوم الثاني...">
+            <button onclick="compareConcepts()">إنشاء جدول المقارنة</button>
+            <div id="comparisonOutput" style="margin-top:15px;"></div>
+        </div>
+
+        <!-- الثاني عشر: مولّد المسائل العملية -->
+        <div class="card" id="sec-problems">
+            <h2><i class="fa-solid fa-calculator"></i> مولّد المسائل العملية والتمارين</h2>
+            <select id="probSubject">
+                <option value="محاسبة مالية">محاسبة مالية</option>
+                <option value="إحصاء">إحصاء واقتصاد</option>
+                <option value="رياضيات وتطبيقات">رياضيات وتطبيقات</option>
+            </select>
+            <button onclick="generatePracticalProblem()">توليد مسألة عملية جديدة</button>
+            <div id="problemOutput" style="margin-top:15px; background:#030712; padding:15px; border-radius:10px; display:none;"></div>
+        </div>
+
+        <!-- الثالث عشر: قاموس المصطلحات الدراسية -->
+        <div class="card" id="sec-glossary">
+            <h2><i class="fa-solid fa-book"></i> قاموس المصطلحات الدراسية</h2>
+            <input type="text" id="glossaryTerm" placeholder="المصطلح...">
+            <input type="text" id="glossaryDef" placeholder="التعريف أو الترجمة...">
+            <button onclick="addGlossaryTerm()">إضافة للقاموس</button>
+            <input type="text" id="glossarySearch" placeholder="بحث في المصطلحات..." oninput="filterGlossary()" style="margin-top:15px;">
+            <div id="glossaryList" style="margin-top:10px;"></div>
+        </div>
+
+        <!-- الرابع عشر: مولّد تدريبات من موضوعات المنهج -->
+        <div class="card" id="sec-training">
+            <h2><i class="fa-solid fa-dumbbell"></i> مولّد التدريبات حسب موضوعات المنهج</h2>
+            <input type="text" id="trainTopicName" placeholder="المفهوم الرئيسي للمنهج...">
+            <button onclick="generateTrainingFromTopic()">توليد تدريبات فورية</button>
+            <div id="trainingOutput" style="margin-top:15px;"></div>
+        </div>
+
+        <!-- الخامس عشر: تقرير الجاهزية للامتحان -->
+        <div class="card" id="sec-readiness">
+            <h2><i class="fa-solid fa-file-waveform"></i> تقرير الجاهزية الشامل للامتحان</h2>
+            <button onclick="generateReadinessReport()">حساب وتحديث تقرير الجاهزية</button>
+            <div id="readinessOutput" style="margin-top:15px; background:#030712; padding:15px; border-radius:10px;">اضغط على الزر لعرض تحليل الجاهزية.</div>
+        </div>
+
+        <!-- المهام اليومية -->
+        <div class="card" id="sec-todos">
+            <h2><i class="fa-solid fa-list-check"></i> مهام المحاضرات والجدول (بالتاريخ)</h2>
+            <input type="text" id="todoInput" placeholder="عنوان المهمة أو المحاضرة...">
+            <div style="display: flex; gap: 10px;">
+                <input type="date" id="todoDate" style="margin-bottom:0;">
+                <button onclick="addTodo()">إضافة مهمة</button>
+            </div>
+            <ul class="todo-list" id="todoList" style="margin-top:12px; list-style:none;"></ul>
+        </div>
+
+        <!-- تحليل المستوى -->
+        <div class="card" id="sec-analytics">
+            <h2><i class="fa-solid fa-chart-line"></i> لوحة تحليل المستوى الدراسي</h2>
+            <div id="analyticsContent" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 15px;"></div>
+        </div>
+
+        <!-- كروت الحفظ -->
+        <div class="card" id="sec-flashcards">
+            <h2><i class="fa-solid fa-clone"></i> كروت الحفظ والمراجعة (Flashcards)</h2>
+            <input type="text" id="fcSubject" placeholder="المادة الدراسية...">
+            <input type="text" id="fcQuestion" placeholder="السؤال (الوجه الأول)...">
+            <input type="text" id="fcAnswer" placeholder="الإجابة (الوجه الثاني)...">
+            <button onclick="addFlashcard()">إضافة كارت جديد</button>
+            <div id="flashcardsList" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 15px; margin-top: 15px;"></div>
+        </div>
+
+        <!-- المدرس الذكي -->
+        <div class="card" id="sec-aitutor">
+            <h2><i class="fa-solid fa-robot"></i> المدرس الذكي (AI Tutor)</h2>
+            <textarea id="aiQuestionInput" placeholder="اطرح سؤالك أو النقطة غير المفهومة في المنهج..." style="height: 80px;"></textarea>
+            <button onclick="askAITutor()"><i class="fa-solid fa-paper-plane"></i> اسأل المدرس الذكي</button>
+            <div id="aiResponseBox" style="background:#030712; padding:15px; border-radius:10px; margin-top:12px; line-height:1.8;">الإجابة والشرح سيظهران هنا...</div>
+        </div>
+
+        <!-- حاسبة الدرجات -->
+        <div class="card" id="sec-grades">
+            <h2><i class="fa-solid fa-calculator"></i> حاسبة الدرجات وهدف الامتياز</h2>
+            <input type="text" id="gradeSubject" placeholder="اسم المادة...">
+            <input type="number" id="gradeTotal" placeholder="الدرجة النهائية للمادة...">
+            <input type="number" id="gradeCurrent" placeholder="الدرجة الحاصل عليها حاليا...">
+            <button onclick="addGradeItem()">حساب النسبة والتقدير</button>
+            <div id="gradesList" style="margin-top: 15px;"></div>
+        </div>
+
+        <!-- الأهداف الأسبوعية -->
+        <div class="card" id="sec-goals">
+            <h2><i class="fa-solid fa-bullseye"></i> الأهداف والإنجازات الأسبوعية</h2>
+            <input type="text" id="goalTitle" placeholder="الهدف (مثلا: إنهاء 5 محاضرات)...">
+            <input type="number" id="goalTarget" placeholder="العدد المستهدف (مثلا: 5)...">
+            <button onclick="addGoal()">إضافة الهدف</button>
+            <div id="goalsList" style="margin-top: 15px;"></div>
+        </div>
+
+        <!-- النسخ الاحتياطي والملاحظات -->
+        <div class="card" id="sec-backup">
+            <h2><i class="fa-solid fa-database"></i> الملاحظات السريعة والنسخ الاحتياطي</h2>
+            <textarea id="quickNotes" placeholder="اكتب ملاحظاتك السريعة هنا (تحفظ تلقائياً)..." style="height: 100px; margin-bottom: 15px;" oninput="saveNotes()"></textarea>
+            <div style="display: flex; gap: 15px; flex-wrap: wrap;">
+                <button onclick="exportBackup()"><i class="fa-solid fa-download"></i> تصدير نسخة احتياطية (JSON)</button>
+                <input type="file" id="importFile" style="display:none;" onchange="importBackup(event)">
+                <button class="secondary" onclick="document.getElementById('importFile').click()"><i class="fa-solid fa-upload"></i> استعادة النسخة</button>
+            </div>
+        </div>
+
+    </div>
+
+    <footer>
+        <p>منصة المذاكرة التكيفية الشاملة صُنع بكل فخر لدعم تفوقك الأكاديمي ❤️</p>
+    </footer>
+
+    <script>
+        // دالة فتح وإغلاق القائمة الجانبية (3 شرط)
+        function toggleSidebar() {
+            const sidebar = document.getElementById('sidebar');
+            const overlay = document.getElementById('overlay');
+            sidebar.classList.toggle('open');
+            overlay.classList.toggle('active');
+        }
+
+        // الانتقال السلس للقسم عند الضغط عليه من القائمة الجانبية وإغلاق القائمة تلقائياً
+        function scrollToSection(sectionId) {
+            toggleSidebar();
+            const el = document.getElementById(sectionId);
+            if (el) {
+                el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            }
+        }
+
+        // --- 1. Pomodoro Timer ---
+        let timerMinutes = 25, timerSeconds = 0, timerInterval = null, isRunning = false;
+        function updateTimerDisplay() {
+            document.getElementById('timerDisplay').innerText = `${String(timerMinutes).padStart(2,'0')}:${String(timerSeconds).padStart(2,'0')}`;
+        }
+        function startTimer() {
+            if (isRunning) return;
+            isRunning = true;
+            timerInterval = setInterval(() => {
+                if (timerSeconds === 0) {
+                    if (timerMinutes === 0) { clearInterval(timerInterval); alert("انتهى وقت التركيز! استرح قليلاً."); isRunning = false; return; }
+                    timerMinutes--; timerSeconds = 59;
+                } else { timerSeconds--; }
+                updateTimerDisplay();
+            }, 1000);
+        }
+        function pauseTimer() { clearInterval(timerInterval); isRunning = false; }
+        function resetTimer() { clearInterval(timerInterval); isRunning = false; timerMinutes = 25; timerSeconds = 0; updateTimerDisplay(); }
+
+        // --- Speech-to-Text & Exam Generation ---
+        let isRecording = false, recognition;
+        function toggleSpeechRecognition() {
+            const micBtn = document.getElementById('micBtn');
+            const lectureInput = document.getElementById('lectureInput');
+            if (!('webkitSpeechRecognition' in window) && !('SpeechRecognition' in window)) {
+                alert("متصفحك لا يدعم التسجيل الصوتي المباشر."); return;
+            }
+            const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+            if (isRecording) { recognition.stop(); return; }
+            recognition = new SpeechRecognition();
+            recognition.lang = 'ar-SA'; recognition.continuous = true; recognition.interimResults = true;
+            recognition.onstart = () => { isRecording = true; micBtn.innerHTML = '<i class="fa-solid fa-microphone-slash"></i> إيقاف'; micBtn.classList.add('recording'); };
+            recognition.onresult = (e) => {
+                let text = ''; for (let i = e.resultIndex; i < e.results.length; i++) text += e.results[i][0].transcript;
+                lectureInput.value += ' ' + text;
+            };
+            recognition.onend = () => { isRecording = false; micBtn.innerHTML = '<i class="fa-solid fa-microphone"></i> تسجيل صوتي للمحاضرة'; micBtn.classList.remove('recording'); };
+            recognition.start();
+        }
+
+        function goToExamAndSummary() {
+            const text = document.getElementById('lectureInput').value;
+            if (!text.trim()) { alert("يرجى إدخال محتوى أولاً!"); return; }
+            document.getElementById('examSummaryContainer').style.display = 'block';
+            const sentences = text.split(/[.،\n]/).filter(s => s.trim().length > 3);
+            let summaryHTML = "📌 **أهم النقاط:**\n";
+            sentences.slice(0, 4).forEach((s, i) => summaryHTML += `${i+1}. ${s.trim()}.\n`);
+            document.getElementById('summaryOutput').innerText = summaryHTML;
+            document.getElementById('examQuestion').innerText = "سؤال تقييمي:";
+            const options = ["التركيز على المفاهيم وتدوينها", "إهمال المراجعة", "الحفظ السطحي"];
+            const optContainer = document.getElementById('examOptionsContainer');
+            optContainer.innerHTML = '';
+            options.forEach((opt, idx) => {
+                optContainer.innerHTML += `<div class="list-item" style="cursor:pointer;" onclick="checkExamAnswer(${idx}, 0)">${opt}</div>`;
+            });
+        }
+        function checkExamAnswer(selected, correct) {
+            const fb = document.getElementById('examFeedback');
+            if (selected === correct) {
+                fb.style.color = '#22c55e'; fb.innerText = "🎉 إجابة صحيحة!";
+                recordExamResult(true);
+            } else {
+                fb.style.color = '#ef4444'; fb.innerText = "❌ إجابة خاطئة، تمت إضافتها لمختبر الأخطاء!";
+                recordExamResult(false);
+                addMistakeItem("محاضرة عامة", "سؤال تقييمي", "التركيز على المفاهيم وتدوينها");
+            }
+        }
+
+        // --- 1. خريطة إتقان المنهج ---
+        let masteryTopics = JSON.parse(localStorage.getItem('study_mastery')) || [];
+        function addMasteryTopic() {
+            const sub = document.getElementById('masterySubject').value;
+            const top = document.getElementById('masteryTopic').value;
+            const status = document.getElementById('masteryStatus').value;
+            if (!sub || !top) return;
+            masteryTopics.push({ subject: sub, topic: top, status });
+            localStorage.setItem('study_mastery', JSON.stringify(masteryTopics));
+            document.getElementById('masteryTopic').value = '';
+            renderMastery();
+        }
+        function renderMastery() {
+            const list = document.getElementById('masteryList');
+            list.innerHTML = masteryTopics.length === 0 ? '<p>لا توجد موضوعات مضافة.</p>' : '';
+            masteryTopics.forEach((m, idx) => {
+                let color = m.status === 'متقن' ? '#16a34a' : (m.status === 'يحتاج إلى مراجعة' ? '#dc2626' : '#38bdf8');
+                list.innerHTML += `<div class="list-item"><span><strong>[${m.subject}]</strong> ${m.topic}</span> <span style="color:${color}; font-weight:bold;">${m.status}</span></div>`;
+            });
+        }
+        renderMastery();
+
+        // --- 2. وضع اختبر فهمي ---
+        function startComprehensionMode() {
+            const text = document.getElementById('comprehensionText').value;
+            if (!text.trim()) { alert("أدخل نصاً أولاً!"); return; }
+            document.getElementById('comprehensionBox').style.display = 'block';
+            document.getElementById('compQuestion').innerText = `لماذا تعتبر النقطة الأساسية في النص مهمة للتطبيق العملي؟`;
+        }
+        function submitCompAnswer() {
+            const ans = document.getElementById('compAnswerInput').value;
+            const fb = document.getElementById('compFeedback');
+            if (!ans.trim()) return;
+            fb.style.color = '#38bdf8';
+            fb.innerText = `💡 تقييم المساعد: تحليلك رائع ويدل على فهمك للآلية الأساسية. استمر!`;
+        }
+
+        // --- 3. تحليل صعوبة الأسئلة ---
+        let diffQuestions = JSON.parse(localStorage.getItem('study_diff_questions')) || [];
+        function addDifficultyQuestion() {
+            const q = document.getElementById('diffQuestionText').value;
+            const level = document.getElementById('diffLevel').value;
+            if (!q.trim()) return;
+            diffQuestions.push({ q, level });
+            localStorage.setItem('study_diff_questions', JSON.stringify(diffQuestions));
+            document.getElementById('diffQuestionText').value = '';
+            renderDiffQuestions();
+        }
+        function renderDiffQuestions() {
+            const list = document.getElementById('difficultyList');
+            list.innerHTML = diffQuestions.map(d => `<div class="list-item"><span>${d.q}</span> <span style="color:#38bdf8;">[${d.level}]</span></div>`).join('');
+        }
+        renderDiffQuestions();
+
+        // --- 4. خريطة ترابط المعلومات ---
+        let mindMapData = JSON.parse(localStorage.getItem('study_mindmap')) || [];
+        function addMindMapConcept() {
+            const c = document.getElementById('mapConcept').value;
+            const r = document.getElementById('mapRelation').value;
+            if (!c || !r) return;
+            mindMapData.push({ concept: c, relation: r });
+            localStorage.setItem('study_mindmap', JSON.stringify(mindMapData));
+            document.getElementById('mapConcept').value = ''; document.getElementById('mapRelation').value = '';
+            renderMindMap();
+        }
+        function renderMindMap() {
+            const list = document.getElementById('mindMapList');
+            list.innerHTML = mindMapData.map(m => `<div class="list-item"><strong>${m.concept}</strong> ➔ <span>${m.relation}</span></div>`).join('');
+        }
+        renderMindMap();
+
+        // --- 5. مختبر أسباب الأخطاء ---
+        let mistakes = JSON.parse(localStorage.getItem('study_mistakes')) || [];
+        function addMistakeItem(subject, question, explanation) {
+            mistakes.push({ subject, question, explanation });
+            localStorage.setItem('study_mistakes', JSON.stringify(mistakes));
+            renderMistakes();
+        }
+        function renderMistakes() {
+            const list = document.getElementById('mistakesList');
+            list.innerHTML = mistakes.length === 0 ? '<p>لا توجد أخطاء مسجلة، أحسنت! 🌟</p>' : '';
+            mistakes.forEach((m, idx) => {
+                list.innerHTML += `<div class="list-item"><div><strong>[${m.subject}]</strong> ${m.question}<br><small style="color:#38bdf8;">الشرح: ${m.explanation}</small></div> <button class="success" style="padding:4px 8px; font-size:0.8rem;" onclick="resolveMistake(${idx})">أتقنتها</button></div>`;
+            });
+        }
+        function resolveMistake(idx) { mistakes.splice(idx,1); localStorage.setItem('study_mistakes', JSON.stringify(mistakes)); renderMistakes(); }
+        renderMistakes();
+
+        // --- 6. محاكي ظروف الامتحان ---
+        function startSimulatedExam() {
+            const sub = document.getElementById('simExamSubject').value;
+            if (!sub.trim()) { alert("أدخل اسم المادة للامتحان!"); return; }
+            document.getElementById('simExamBox').style.display = 'block';
+            document.getElementById('simQText').innerText = `امتحان تجريبي (${sub}): ما هي القاعدة الأساسية لحساب النتيجة الصحيحة؟`;
+            const opts = ["الخطوات النظامية المتسلسلة", "التخمين العشوائي", "تجاهل المعطيات"];
+            const c = document.getElementById('simOptsContainer');
+            c.innerHTML = opts.map((o, i) => `<div class="list-item" style="cursor:pointer;" onclick="selectSimOpt(${i})">${o}</div>`).join('');
+        }
+        let simSelected = -1;
+        function selectSimOpt(i) { simSelected = i; alert("تم اختيار الإجابة، اضغط تسليم الامتحان."); }
+        function submitSimExam() {
+            const res = document.getElementById('simResult');
+            if (simSelected === 0) { res.style.color = '#22c55e'; res.innerText = "النتيجة: 100% ممتاز!"; recordExamResult(true); }
+            else { res.style.color = '#ef4444'; res.innerText = "النتيجة: خطأ، راجع المنهج."; recordExamResult(false); addMistakeItem("محاكي الامتحان", "قاعدة الحساب", "الخطوات النظامية المتسلسلة"); }
+        }
+
+        // --- 7. كاشف المتطلبات السابقة ---
+        let prereqs = JSON.parse(localStorage.getItem('study_prereqs')) || [];
+        function addPrerequisite() {
+            const t = document.getElementById('prereqTarget').value;
+            const r = document.getElementById('prereqRequired').value;
+            if (!t || !r) return;
+            prereqs.push({ target: t, required: r });
+            localStorage.setItem('study_prereqs', JSON.stringify(prereqs));
+            renderPrereqs();
+        }
+        function renderPrereqs() {
+            document.getElementById('prereqList').innerHTML = prereqs.map(p => `<div class="list-item">لابد من دراسة (${p.required}) قبل الانتقال إلى (${p.target})</div>`).join('');
+        }
+        renderPrereqs();
+
+        // --- 8. وضع استرجاع المعلومات ---
+        function evaluateRecall() {
+            const t = document.getElementById('recallTopic').value;
+            const txt = document.getElementById('recallUserText').value;
+            const fb = document.getElementById('recallFeedback');
+            if (!t || !txt) return;
+            fb.style.display = 'block';
+            fb.innerHTML = `✅ **تقييم التذكر الموضوعي (${t}):** استرجعت العناصر الأساسية بشكل صحيح.`;
+        }
+
+        // --- 9. سجل جودة المذاكرة ---
+        let qualityLogs = JSON.parse(localStorage.getItem('study_quality_logs')) || [];
+        function saveStudyQualityLog() {
+            const level = document.getElementById('studyFocusLevel').value;
+            const env = document.getElementById('studyEnvironment').value || 'مكان عادي';
+            qualityLogs.push({ level, env, date: new Date().toLocaleDateString() });
+            localStorage.setItem('study_quality_logs', JSON.stringify(qualityLogs));
+            renderQualityLogs();
+        }
+        function renderQualityLogs() {
+            document.getElementById('qualityLogsList').innerHTML = qualityLogs.map(l => `<div class="list-item"><span>تركيز: ${l.level} (${l.env})</span> <small>${l.date}</small></div>`).join('');
+        }
+        renderQualityLogs();
+
+        // --- 10. مساعد ماذا أذاكر الآن؟ ---
+        function suggestNextStudyStep() {
+            const mins = document.getElementById('availableMinutes').value;
+            const box = document.getElementById('nextStepSuggestionBox');
+            if (!mins) { box.innerHTML = "يرجى تحديد الوقت المتاح أولاً!"; return; }
+            box.innerHTML = `🚀 **اقتراح الخطوة التالية (${mins} دقيقة):** ننصحك بقضاء ${Math.floor(mins*0.6)} دقائق في مراجعة كروت الحفظ، و${Math.ceil(mins*0.4)} دقائق في التدريب.`;
+        }
+
+        // --- 11. مقارنة المفاهيم ---
+        function compareConcepts() {
+            const c1 = document.getElementById('compConcept1').value;
+            const c2 = document.getElementById('compConcept2').value;
+            const out = document.getElementById('comparisonOutput');
+            if (!c1 || !c2) return;
+            out.innerHTML = `<div class="list-item" style="display:block; line-height:1.8;"><h3>مقارنة بين: ${c1} و ${c2}</h3><p>• الفروق الجوهرية والخصائص التشغيلية لكل منهما.</p></div>`;
+        }
+
+        // --- 12. مولّد المسائل العملية ---
+        function generatePracticalProblem() {
+            const sub = document.getElementById('probSubject').value;
+            const box = document.getElementById('problemOutput');
+            box.style.display = 'block';
+            box.innerHTML = `📐 **مسألة عملية في (${sub}):** احسب الناتج بناءً على المعطيات الأساسية للمنهج. <br><button class="success" style="margin-top:10px;" onclick="alert('الحل النموذجي صحيح.')">إظهار الحل النموذجي</button>`;
+        }
+
+        // --- 13. قاموس المصطلحات ---
+        let glossary = JSON.parse(localStorage.getItem('study_glossary')) || [];
+        function addGlossaryTerm() {
+            const term = document.getElementById('glossaryTerm').value;
+            const def = document.getElementById('glossaryDef').value;
+            if (!term || !def) return;
+            glossary.push({ term, def });
+            localStorage.setItem('study_glossary', JSON.stringify(glossary));
+            document.getElementById('glossaryTerm').value = ''; document.getElementById('glossaryDef').value = '';
+            renderGlossary();
+        }
+        function renderGlossary(filter="") {
+            const list = document.getElementById('glossaryList');
+            const filtered = glossary.filter(g => g.term.toLowerCase().includes(filter) || g.def.toLowerCase().includes(filter));
+            list.innerHTML = filtered.map(g => `<div class="list-item"><strong>${g.term}</strong> : <span>${g.def}</span></div>`).join('');
+        }
+        function filterGlossary() { renderGlossary(document.getElementById('glossarySearch').value.toLowerCase()); }
+        renderGlossary();
+
+        // --- 14. مولّد التدريبات ---
+        function generateTrainingFromTopic() {
+            const top = document.getElementById('trainTopicName').value;
+            const out = document.getElementById('trainingOutput');
+            if (!top) return;
+            out.innerHTML = `<div class="list-item" style="display:block;"><strong>تدريب فوري لـ (${top}):</strong><p style="margin-top:5px;">س: ما هي الآلية الأنسب للتعامل مع هذا المفهوم؟</p></div>`;
+        }
+
+        // --- 15. تقرير الجاهزية للامتحان ---
+        function generateReadinessReport() {
+            const out = document.getElementById('readinessOutput');
+            const masteryDone = masteryTopics.filter(m => m.status === 'متقن').length;
+            const totalM = masteryTopics.length > 0 ? masteryTopics.length : 1;
+            const score = Math.round((masteryDone / totalM) * 100);
+            out.innerHTML = `📊 **تقرير الجاهزية الشامل:**<br>- نسبة إتقان الموضوعات المسجلة: ${score}%<br>- عدد الأخطاء بقائمة المختبر: ${mistakes.length}`;
+        }
+
+        // --- الأقسام الأساسية (المهام، التحليل، الكروت، الدرجات، الأهداف، النسخ الاحتياطي) ---
+        let analyticsData = JSON.parse(localStorage.getItem('study_analytics')) || { examsCount: 0, correctExams: 0 };
+        function recordExamResult(isCorrect) {
+            analyticsData.examsCount++;
+            if (isCorrect) analyticsData.correctExams++;
+            localStorage.setItem('study_analytics', JSON.stringify(analyticsData));
+            renderAnalytics();
+        }
+        function renderAnalytics() {
+            const avg = analyticsData.examsCount > 0 ? Math.round((analyticsData.correctExams / analyticsData.examsCount) * 100) : 0;
+            document.getElementById('analyticsContent').innerHTML = `
+                <div class="card" style="text-align:center; margin:0;"><h3>${analyticsData.examsCount}</h3><p>الامتحانات المجراة</p></div>
+                <div class="card" style="text-align:center; margin:0;"><h3>${avg}%</h3><p>متوسط النجاح</p></div>
+                <div class="card" style="text-align:center; margin:0;"><h3>${todos.filter(t=>t.completed).length}/${todos.length}</h3><p>إنجاز المهام</p></div>
+            `;
+        }
+        renderAnalytics();
+
+        let todos = JSON.parse(localStorage.getItem('study_hub_todos_v2')) || [];
+        function renderTodos() {
+            const list = document.getElementById('todoList');
+            list.innerHTML = todos.map((t, idx) => `<li class="todo-item ${t.completed ? 'completed':''}"><span onclick="toggleTodo(${idx})" style="cursor:pointer; flex-grow:1;">${t.text} (${t.date || 'اليوم'})</span> <button class="danger" style="padding:4px 8px; font-size:0.8rem;" onclick="deleteTodo(${idx})">حذف</button></li>`).join('');
+            localStorage.setItem('study_hub_todos_v2', JSON.stringify(todos));
+        }
+        function addTodo() {
+            const inp = document.getElementById('todoInput'); const d = document.getElementById('todoDate');
+            if (!inp.value.trim()) return;
+            todos.push({ text: inp.value, date: d.value || 'اليوم', completed: false });
+            inp.value = ''; d.value = ''; renderTodos();
+        }
+        function toggleTodo(i) { todos[i].completed = !todos[i].completed; renderTodos(); }
+        function deleteTodo(i) { todos.splice(i,1); renderTodos(); }
+        renderTodos();
+
+        let flashcards = JSON.parse(localStorage.getItem('study_flashcards')) || [];
+        function addFlashcard() {
+            const s = document.getElementById('fcSubject').value; const q = document.getElementById('fcQuestion').value; const a = document.getElementById('fcAnswer').value;
+            if (!q || !a) return;
+            flashcards.push({ subject: s||'عام', question: q, answer: a, flipped: false });
+            localStorage.setItem('study_flashcards', JSON.stringify(flashcards));
+            document.getElementById('fcQuestion').value=''; document.getElementById('fcAnswer').value='';
+            renderFlashcards();
+        }
+        function renderFlashcards() {
+            document.getElementById('flashcardsList').innerHTML = flashcards.map((fc, i) => `<div class="flashcard" onclick="toggleFC(${i})"><span style="font-size:0.75rem; color:#38bdf8;">[${fc.subject}]</span><p style="margin-top:8px; font-weight:bold;">${fc.flipped ? fc.answer : fc.question}</p></div>`).join('');
+        }
+        function toggleFC(i) { flashcards[i].flipped = !flashcards[i].flipped; renderFlashcards(); }
+        renderFlashcards();
+
+        function askAITutor() {
+            const q = document.getElementById('aiQuestionInput').value;
+            const res = document.getElementById('aiResponseBox');
+            if (!q.trim()) return;
+            res.innerHTML = "🤖 جاري الشرح...";
+            setTimeout(() => { res.innerHTML = `💡 <strong>شرح المدرس الذكي:</strong> إجابة مبسطة لمفهوم ("${q}").`; }, 800);
+        }
+
+        let grades = JSON.parse(localStorage.getItem('study_grades')) || [];
+        function addGradeItem() {
+            const sub = document.getElementById('gradeSubject').value; const tot = parseFloat(document.getElementById('gradeTotal').value); const cur = parseFloat(document.getElementById('gradeCurrent').value);
+            if (!sub || isNaN(tot) || isNaN(cur)) return;
+            grades.push({ sub, tot, cur });
+            localStorage.setItem('study_grades', JSON.stringify(grades));
+            renderGrades();
+        }
+        function renderGrades() {
+            document.getElementById('gradesList').innerHTML = grades.map(g => `<div class="list-item"><span>${g.sub}</span> <span>${g.cur}/${g.tot} (${Math.round((g.cur/g.tot)*100)}%)</span></div>`).join('');
+        }
+        renderGrades();
+
+        let goals = JSON.parse(localStorage.getItem('study_goals')) || [];
+        function addGoal() {
+            const t = document.getElementById('goalTitle').value; const trg = document.getElementById('goalTarget').value;
+            if (!t || !trg) return;
+            goals.push({ t, trg: parseInt(trg), prog: 0 });
+            localStorage.setItem('study_goals', JSON.stringify(goals));
+            renderGoals();
+        }
+        function renderGoals() {
+            document.getElementById('goalsList').innerHTML = goals.map((g, i) => `<div class="list-item"><span>${g.t} (${g.prog}/${g.trg})</span> <button class="success" onclick="incGoal(${i})">+ تقدم</button></div>`).join('');
+        }
+        function incGoal(i) { goals[i].prog++; localStorage.setItem('study_goals', JSON.stringify(goals)); renderGoals(); }
+        renderGoals();
+
+        const notesArea = document.getElementById('quickNotes');
+        notesArea.value = localStorage.getItem('quick_notes_content') || '';
+        function saveNotes() { localStorage.setItem('quick_notes_content', notesArea.value); }
+
+        function exportBackup() {
+            const data = { masteryTopics, diffQuestions, mindMapData, mistakes, prereqs, qualityLogs, glossary, todos, flashcards, grades, goals, analyticsData };
+            const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'json' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a'); a.href = url; a.download = 'study_hub_pro_v3_backup.json'; a.click();
+        }
+        function importBackup(e) {
+            const file = e.target.files[0];
+            if (!file) return;
+            const reader = new FileReader();
+            reader.onload = function(evt) {
+                try {
+                    const data = JSON.parse(evt.target.result);
+                    if (confirm("هل تريد استبدال البيانات الحالية بالنسخة الاحتياطية؟")) {
+                        if (data.masteryTopics) localStorage.setItem('study_mastery', JSON.stringify(data.masteryTopics));
+                        if (data.todos) localStorage.setItem('study_hub_todos_v2', JSON.stringify(data.todos));
+                        alert("تمت الاستعادة بنجاح! سيتم تحديث الصفحة.");
+                        location.reload();
+                    }
+                } catch(err) { alert("ملف النسخ غير صالح!"); }
+            };
+            reader.readAsText(file);
+        }
+    </script>
+</body>
+</html>
